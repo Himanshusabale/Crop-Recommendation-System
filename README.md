@@ -40,17 +40,16 @@ The system analyzes the following soil and climate parameters:
 
 ## Deployment
 
-### Vercel Deployment
-
-1. **Go to [vercel.com](https://vercel.com)**
-2. **Import your GitHub repository**
-3. **Deploy automatically**
-
-### Railway Deployment
+### Railway Deployment (Recommended)
 
 1. **Go to [railway.app](https://railway.app)**
-2. **Connect your GitHub repository**
-3. **Deploy with one click**
+2. **Sign up/Login with GitHub**
+3. **Click "New Project"**
+4. **Import your GitHub repository**
+5. **Railway will automatically detect it's a Python app**
+6. **Deploy with one click**
+
+Your app will be live at: `https://your-app-name.railway.app`
 
 ## File Structure
 
@@ -60,7 +59,7 @@ crop-recommendation-system/
 ├── templates/
 │   └── index.html        # Web interface template
 ├── requirements.txt       # Python dependencies
-├── vercel.json           # Vercel configuration
+├── Procfile              # Railway configuration
 └── README.md             # This file
 ```
 
@@ -69,6 +68,13 @@ crop-recommendation-system/
 - `GET /` - Main application page
 - `POST /predict` - Get crop recommendation
 - `GET /get_crop_info/<crop_name>` - Get information about a specific crop
+
+## Technical Details
+
+- **Backend**: Flask (Python)
+- **Machine Learning**: RandomForest Classifier (scikit-learn)
+- **Frontend**: Bootstrap 5 + Custom CSS
+- **Deployment**: Railway (optimized)
 
 ## License
 
