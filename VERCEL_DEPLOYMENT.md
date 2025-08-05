@@ -1,6 +1,6 @@
 # Vercel Deployment Guide
 
-This guide will help you deploy your Crop Recommendation System to Vercel without the "pg not found" error.
+This guide will help you deploy your Crop Recommendation System to Vercel without installation errors.
 
 ## 🚀 **Quick Deploy to Vercel**
 
@@ -8,14 +8,14 @@ This guide will help you deploy your Crop Recommendation System to Vercel withou
 
 1. **Ensure you have the correct files:**
    - `vercel.json` - Vercel configuration
-   - `requirements.txt` - Python dependencies
+   - `requirements.txt` - Python dependencies (optimized for Vercel)
    - `app.py` - Flask application
    - `templates/index.html` - Web interface
 
 2. **Push to GitHub:**
    ```bash
    git add .
-   git commit -m "Add Vercel configuration"
+   git commit -m "Optimize for Vercel deployment"
    git push origin main
    ```
 
@@ -36,18 +36,17 @@ This guide will help you deploy your Crop Recommendation System to Vercel withou
 
 ## 🔧 **Troubleshooting**
 
-### **If you get "pg not found" error:**
+### **If you get pip installation errors:**
 
 1. **Check your requirements.txt** - Make sure it only contains:
    ```
    Flask==2.3.3
-   pandas==2.0.3
+   pandas==1.5.3
    numpy==1.24.3
-   lightgbm==4.0.0
    scikit-learn==1.3.0
    ```
 
-2. **Remove any PostgreSQL dependencies** if they exist
+2. **The app now uses RandomForest instead of LightGBM** for better Vercel compatibility
 
 3. **Use the vercel.json configuration** provided in this repository
 
@@ -63,7 +62,7 @@ This guide will help you deploy your Crop Recommendation System to Vercel withou
 your-repo/
 ├── app.py                 # Main Flask app
 ├── vercel.json           # Vercel configuration
-├── requirements.txt      # Python dependencies
+├── requirements.txt      # Python dependencies (optimized)
 ├── templates/
 │   └── index.html       # Web interface
 ├── crop_model.pkl       # ML model (optional)
@@ -103,12 +102,12 @@ If Vercel continues to have issues, try **Railway** instead:
 3. **Railway will automatically detect it's a Python app**
 4. **Deploy with one click**
 
-Railway is often more reliable for Flask applications and doesn't have the PostgreSQL dependency issues.
+Railway is often more reliable for Flask applications and doesn't have the dependency issues.
 
 ## 🔍 **Common Issues & Solutions**
 
-### **Issue: "pg not found"**
-**Solution**: Remove any PostgreSQL dependencies from requirements.txt
+### **Issue: "pip installation failed"**
+**Solution**: Use the optimized requirements.txt with lighter dependencies
 
 ### **Issue: "Module not found"**
 **Solution**: Ensure all dependencies are in requirements.txt
@@ -143,6 +142,13 @@ vercel --prod
 - ✅ Build completes without errors
 - ✅ App loads at your Vercel URL
 - ✅ Predictions work correctly
-- ✅ No "pg not found" errors
+- ✅ No pip installation errors
 
-Your app should be live at: `https://your-app-name.vercel.app` 
+Your app should be live at: `https://your-app-name.vercel.app`
+
+## 🔄 **Changes Made for Vercel Compatibility**
+
+1. **Replaced LightGBM with RandomForest** - Lighter, more compatible
+2. **Optimized dependencies** - Removed heavy packages
+3. **Updated model training** - Uses scikit-learn instead of LightGBM
+4. **Maintained functionality** - Same features, better compatibility 

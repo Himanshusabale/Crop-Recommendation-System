@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import numpy as np
-import lightgbm as lgb
+from sklearn.ensemble import RandomForestClassifier
 import pickle
 import os
 
@@ -57,8 +57,8 @@ def train_model():
     X = df.drop('crop', axis=1)
     y = df['crop']
     
-    # Train LightGBM model
-    model = lgb.LGBMClassifier(random_state=42, verbose=-1)  # Suppress warnings
+    # Train RandomForest model (more compatible with Vercel)
+    model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=1)
     model.fit(X, y)
     
     # Save the model

@@ -5,7 +5,7 @@ A modern web application that provides crop recommendations based on soil and cl
 ## Features
 
 - **Interactive Web Interface**: Beautiful, responsive UI built with Bootstrap and custom CSS
-- **Machine Learning Model**: Uses LightGBM for accurate crop predictions
+- **Machine Learning Model**: Uses RandomForest for accurate crop predictions
 - **Real-time Predictions**: Get instant crop recommendations with confidence scores
 - **Crop Information**: Detailed information about recommended crops
 - **Sample Data**: Try the system with pre-loaded sample data
@@ -61,7 +61,7 @@ The application includes three sample datasets for testing:
 
 ### Backend
 - **Framework**: Flask (Python)
-- **Machine Learning**: LightGBM Classifier
+- **Machine Learning**: RandomForest Classifier (scikit-learn)
 - **Data Processing**: Pandas, NumPy
 - **Model Persistence**: Pickle serialization
 
@@ -72,7 +72,7 @@ The application includes three sample datasets for testing:
 - **Interactivity**: Vanilla JavaScript with async/await
 
 ### Model Training
-The system includes a training function that generates sample data and trains a LightGBM model. In a production environment, you would:
+The system includes a training function that generates sample data and trains a RandomForest model. In a production environment, you would:
 
 1. Replace the sample data generation with your actual dataset
 2. Use the trained model from your Jupyter notebook
