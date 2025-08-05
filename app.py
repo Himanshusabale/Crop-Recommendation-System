@@ -18,14 +18,19 @@ def load_model():
         # Try to load existing model
         with open('crop_model.pkl', 'rb') as f:
             model = pickle.load(f)
+            # Check if it's a RandomForest model
+            if not hasattr(model, 'estimators_') or not hasattr(model, 'n_estimators'):
+                print("Warning: Loaded model is not RandomForest, retraining...")
+                model = None
     except FileNotFoundError:
         # If no saved model, we'll need to train one
-        # For now, we'll create a placeholder
         model = None
 
 def train_model():
     """Train the model with sample data"""
     global model
+    
+    print("Training new RandomForest model...")
     
     # Create sample data for demonstration
     # In a real scenario, you would load your actual dataset
@@ -61,9 +66,13 @@ def train_model():
     model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=1)
     model.fit(X, y)
     
+    print(f"Model trained successfully with {len(model.estimators_)} trees")
+    
     # Save the model
     with open('crop_model.pkl', 'wb') as f:
         pickle.dump(model, f)
+    
+    print("Model saved successfully")
 
 @app.route('/')
 def home():
