@@ -9,33 +9,16 @@ app = Flask(__name__)
 
 # Global variables for the model and feature names
 model = None
-feature_names = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
-
-def load_model():
-    """Load the trained model"""
-    global model
-    try:
-        # Try to load existing model
-        with open('crop_model.pkl', 'rb') as f:
-            model = pickle.load(f)
-            # Check if it's a RandomForest model
-            if not hasattr(model, 'estimators_') or not hasattr(model, 'n_estimators'):
-                print("Warning: Loaded model is not RandomForest, retraining...")
-                model = None
-    except FileNotFoundError:
-        # If no saved model, we'll need to train one
-        model = None
 
 def train_model():
     """Train the model with sample data"""
     global model
     
-    print("Training new RandomForest model...")
+    print("Training RandomForest model...")
     
-    # Create sample data for demonstration
-    # In a real scenario, you would load your actual dataset
+    # Create sample data
     np.random.seed(42)
-    n_samples = 1000
+    n_samples = 500
     
     # Generate sample data
     data = {
@@ -48,7 +31,7 @@ def train_model():
         'rainfall': np.random.uniform(20.0, 300.0, n_samples)
     }
     
-    # Create sample crop labels (you would use your actual crop names)
+    # Create sample crop labels
     crops = ['rice', 'maize', 'chickpea', 'kidneybeans', 'pigeonpeas', 
              'mothbeans', 'mungbean', 'blackgram', 'lentil', 'pomegranate',
              'banana', 'mango', 'grapes', 'watermelon', 'muskmelon', 'apple',
@@ -62,7 +45,7 @@ def train_model():
     X = df.drop('crop', axis=1)
     y = df['crop']
     
-    # Train RandomForest model (more compatible with Vercel)
+    # Train RandomForest model
     model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=1)
     model.fit(X, y)
     
@@ -73,6 +56,19 @@ def train_model():
         pickle.dump(model, f)
     
     print("Model saved successfully")
+
+def load_model():
+    """Load the trained model"""
+    global model
+    try:
+        with open('crop_model.pkl', 'rb') as f:
+            model = pickle.load(f)
+            # Verify it's a RandomForest model
+            if not hasattr(model, 'estimators_'):
+                print("Warning: Loaded model is not RandomForest, retraining...")
+                model = None
+    except FileNotFoundError:
+        model = None
 
 @app.route('/')
 def home():
@@ -171,20 +167,16 @@ def get_crop_info(crop_name):
         'water_requirement': 'Varies by crop type.'
     }))
 
-# Initialize model on startup
+# Initialize model
 if __name__ == '__main__':
-    # Load or train the model
     load_model()
     if model is None:
         train_model()
     
-    # Get port from environment variable or use default
     port = int(os.environ.get('PORT', 5000))
-    
-    # Run the app
     app.run(debug=False, host='0.0.0.0', port=port)
 else:
-    # For Vercel deployment, initialize model when module is imported
+    # For Vercel deployment
     load_model()
     if model is None:
         train_model() 
