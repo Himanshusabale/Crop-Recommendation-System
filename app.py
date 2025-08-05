@@ -58,7 +58,7 @@ def train_model():
     y = df['crop']
     
     # Train LightGBM model
-    model = lgb.LGBMClassifier(random_state=42)
+    model = lgb.LGBMClassifier(random_state=42, verbose=-1)  # Suppress warnings
     model.fit(X, y)
     
     # Save the model
@@ -88,8 +88,11 @@ def predict():
         
         # Make prediction
         if model is not None:
-            prediction = model.predict([features])[0]
-            probability = model.predict_proba([features])[0]
+            # Convert to numpy array with proper shape
+            features_array = np.array(features).reshape(1, -1)
+            
+            prediction = model.predict(features_array)[0]
+            probability = model.predict_proba(features_array)[0]
             max_prob = max(probability)
             
             return jsonify({
@@ -159,6 +162,7 @@ def get_crop_info(crop_name):
         'water_requirement': 'Varies by crop type.'
     }))
 
+# Initialize model on startup
 if __name__ == '__main__':
     # Load or train the model
     load_model()
@@ -169,4 +173,9 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     
     # Run the app
-    app.run(debug=False, host='0.0.0.0', port=port) 
+    app.run(debug=False, host='0.0.0.0', port=port)
+else:
+    # For Vercel deployment, initialize model when module is imported
+    load_model()
+    if model is None:
+        train_model() 
