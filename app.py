@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 
-# Global variables for the model and feature names
+# Global variables for the model
 model = None
 
 def train_model():
@@ -58,17 +58,10 @@ def train_model():
     print("Model saved successfully")
 
 def load_model():
-    """Load the trained model"""
+    """Load the trained model - but force retrain for now"""
     global model
-    try:
-        with open('crop_model.pkl', 'rb') as f:
-            model = pickle.load(f)
-            # Verify it's a RandomForest model
-            if not hasattr(model, 'estimators_'):
-                print("Warning: Loaded model is not RandomForest, retraining...")
-                model = None
-    except FileNotFoundError:
-        model = None
+    # Force retrain to ensure we use RandomForest
+    model = None
 
 @app.route('/')
 def home():
@@ -176,7 +169,5 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
 else:
-    # For Vercel deployment
-    load_model()
-    if model is None:
-        train_model() 
+    # For Vercel deployment - force retrain
+    train_model() 
