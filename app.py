@@ -45,23 +45,17 @@ def train_model():
     X = df.drop('crop', axis=1)
     y = df['crop']
     
-    # Train RandomForest model
+    # Train RandomForest model ONLY
     model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=1)
     model.fit(X, y)
     
-    print(f"Model trained successfully with {len(model.estimators_)} trees")
+    print(f"RandomForest model trained successfully with {len(model.estimators_)} trees")
     
     # Save the model
     with open('crop_model.pkl', 'wb') as f:
         pickle.dump(model, f)
     
-    print("Model saved successfully")
-
-def load_model():
-    """Load the trained model - but force retrain for now"""
-    global model
-    # Force retrain to ensure we use RandomForest
-    model = None
+    print("RandomForest model saved successfully")
 
 @app.route('/')
 def home():
@@ -160,14 +154,12 @@ def get_crop_info(crop_name):
         'water_requirement': 'Varies by crop type.'
     }))
 
-# Initialize model
+# Initialize model - ALWAYS train new RandomForest model
 if __name__ == '__main__':
-    load_model()
-    if model is None:
-        train_model()
+    train_model()
     
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
 else:
-    # For Vercel deployment - force retrain
+    # For Vercel deployment - ALWAYS train new RandomForest model
     train_model() 
